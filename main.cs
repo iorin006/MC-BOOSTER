@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using System.Threading;
+using System.IO;
 
 namespace AutoRestartApp
 {
@@ -8,30 +8,54 @@ namespace AutoRestartApp
     {
         static void Main(string[] args)
         {
-            Console.Title = "MC BOOSTER v1.18.12";
-            string appPath = @"C:\Program Files\WindowsApps\Microsoft.MinecraftUWP_1.18.1201.0_x64__8wekyb3d8bbwe\Minecraft.Windows.exe";
-            Console.WriteLine("Ctrl + C で終了できます");
+            Console.Title = "MC BOOSTER master_ver";
 
-            while (true)
+            string log = "path.txt";
+            string addpath;
+
+            try
             {
-                try
+                using (StreamReader reader = new StreamReader(log))
                 {
-                    Process process = new Process();
-                    process.StartInfo.FileName = appPath;
-
-                    // アプリケーションを開始
-                    process.Start();
-
-                    // アプリケーションの終了を待機
-                    process.WaitForExit();
+                    addpath = reader.ReadLine();
                 }
-                catch (Exception e)
+
+                string test = "MC BOOSTER\n";
+                int width = Console.WindowWidth;
+                int padding = (width - test.Length) / 2;
+                string centeredText = new string(' ', padding) + test;
+                Console.WriteLine(centeredText);
+                Console.WriteLine("Path: " + addpath);
+                Console.WriteLine("Ctrl + C で終了できます");
+
+                while (true)
                 {
-                    Console.WriteLine("エラーが発生しました: " + e.Message);
-                    break;
+                    try
+                    {
+                        Process process = new Process();
+                        process.StartInfo.FileName = addpath;
+
+                        // アプリケーションを開始
+                        process.Start();
+
+                        // アプリケーションの終了を待機
+                        process.WaitForExit();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("エラーが発生しました: " + e.Message);
+                        break;
+                    }
                 }
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("ファイルが見つかりません。");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("エラーが発生しました: " + e.Message);
             }
         }
     }
 }
-
